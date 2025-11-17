@@ -1,0 +1,24 @@
+{
+    "name": "scheduler-app",
+    "version": "1.0.0",
+    "description": "Calendar and scheduler web app with auth, friends, events, and soft delete.",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js",
+        "dev": "nodemon server.js"
+    },
+    "dependencies": {
+        "bcrypt": "^5.1.1",
+        "connect-mongo": "^5.1.0",
+        "dotenv": "^16.4.0",
+        "ejs": "^3.1.10",
+        "express": "^4.21.0",
+        "express-ejs-layouts": "^2.5.1",
+        "express-session": "^1.18.0",
+        "mysql2": "^3.11.0",
+        "path": "^0.12.7"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.0"
+    }
+}

@@ -1,0 +1,21 @@
+<h2>Deleted Events (Trash)</h2>
+
+<ul class="list-group">
+    <% if (!events.length) { %>
+        <li class="list-group-item text-muted">Trash is empty.</li>
+        <% } %>
+            <% events.forEach(e=> { %>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="badge me-2" <span class="badge bg-primary me-2">&nbsp;</span>
+                        <strong>
+                            <%= e.title %>
+                        </strong>
+                        <div><small>Deleted at: <%= e.deleted_at.toISOString().slice(0,16).replace('T',' ') %></small></div>
+      </div>
+      <form method="post" action="/events/<%= e.event_id %>/restore">
+        <button class="btn btn-sm btn-outline-success">Restore</button>
+      </form>
+    </li>
+  <% }) %>
+</ul>

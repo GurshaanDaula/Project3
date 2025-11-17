@@ -1,0 +1,40 @@
+<h2>
+    <%= mode==='create' ? 'New Event' : 'Edit Event' %>
+</h2>
+
+<form method="post" action="<%= mode === 'create'
+  ? '/events/new'
+  : ('/events/' + event.event_id + '/edit') %>">
+
+    <div class="mb-3">
+        <label class="form-label">Title</label>
+        <input type="text" name="title" class="form-control" value="<%= event ? event.title : '' %>" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea name="description" class="form-control" rows="3"><%= event ? event.description : '' %></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Start Time</label>
+        <input type="datetime-local" name="start_time" class="form-control"
+            value="<%= event ? event.start_time.toISOString().slice(0,16) : '' %>" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">End Time</label>
+        <input type="datetime-local" name="end_time" class="form-control"
+            value="<%= event ? event.end_time.toISOString().slice(0,16) : '' %>" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Color</label>
+        <input type="color" name="color_hex" class="form-control form-control-color"
+            value="<%= event ? event.color_hex : '#2196f3' %>">
+    </div>
+
+    <button class="btn btn-primary">
+        <%= mode==='create' ? 'Create Event' : 'Save Changes' %>
+    </button>
+</form>

@@ -1,0 +1,34 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>My Events (Calendar View)</h2>
+    <a href="/events/new" class="btn btn-success">+ New Event</a>
+</div>
+
+<h4>Events This Week</h4>
+<p><small>
+        <%= weekStart %> → <%= weekEnd %>
+    </small></p>
+
+<ul class="list-group mb-4">
+    <% if (!events || !events.length) { %>
+        <li class="list-group-item text-muted">No events this week.</li>
+        <% } %>
+            <% events.forEach(e=> { %>
+                <li class="list-group-item">
+                    <span class="badge bg-primary me-2">&nbsp;</span>
+                    <strong>
+                        <%= e.title %>
+                    </strong>
+                    <div><small>
+                            <%= e.start_time.toISOString().slice(0,16).replace('T',' ') %>
+                &nbsp;→&nbsp;
+                <%= e.end_time.toISOString().slice(0,16).replace(' T',' ') %>
+            </small></div>
+            <div class="mt-2">
+                <a class="btn btn-sm btn-outline-primary" href="/events/<%= e.event_id %>/edit">Edit</a>
+                <form method="post" action="/events/<%= e.event_id %>/delete" class="d-inline">
+                    <button class="btn btn-sm btn-outline-danger">Delete</button>
+                </form>
+            </div>
+        </li>
+    <% }) %>
+</ul>
