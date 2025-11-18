@@ -9,8 +9,8 @@ const requireLogin = require("./middleware/requireLogin");
 // Routes
 const authRoutes = require("./routes/authRoutes");
 const calendarRoutes = require("./routes/calendarRoutes");
-const eventsRoutes = require("./routes/eventsRoutes");
-const friendsRoutes = require("./routes/friendsRoutes");
+const eventsRoutes = require("./routes/eventRoutes");
+const friendsRoutes = require("./routes/friendRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
