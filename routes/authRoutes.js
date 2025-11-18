@@ -35,7 +35,7 @@ router.post("/login", async (req, res) => {
 
         console.log("LOGIN SUCCESS — SESSION SET:", req.session.user);
 
-        return res.redirect("/calendar");
+        return res.redirect("/calendar/index");
     } catch (err) {
         console.error("Login Error:", err);
         return res.render("auth/login", { error: "An unexpected error occurred" });
