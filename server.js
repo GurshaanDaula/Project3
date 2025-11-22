@@ -13,6 +13,7 @@ const eventsRoutes = require("./routes/eventRoutes");
 const friendsRoutes = require("./routes/friendRoutes");
 
 const app = express();
+app.set("trust proxy", 1);
 const PORT = process.env.PORT || 3000;
 
 // View engine
