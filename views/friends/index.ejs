@@ -15,7 +15,7 @@
                         <% } %>
                             <% friendships.forEach(f=> { %>
                                 <li class="list-group-item">
-                                    <% if (f.requester_id===currentUser.user_id) { %>
+                                    <% if (f.requester_id===user.user_id) { %>
                                         You → <strong>
                                             <%= f.addressee_name %>
                                         </strong> (<%= f.status %>)
