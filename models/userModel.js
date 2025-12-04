@@ -1,3 +1,4 @@
+// models/userModel.js
 const pool = require("../config/db");
 
 async function findByEmailOrUsername(identifier) {
@@ -23,11 +24,28 @@ async function createUser(email, username, password_hash) {
     return result.insertId;
 }
 
-async function searchUsersByUsernamePartial(term, excludeUserId) {
+// UPDATED: exclude self and existing friendships
+async function searchUsersByUsernamePartial(term, currentUserId) {
+    const likeTerm = `%${term}%`;
+
     const [rows] = await pool.query(
-        "SELECT user_id, username FROM users WHERE username LIKE ? AND user_id <> ?",
-        [`%${term}%`, excludeUserId]
+        `SELECT u.user_id, u.username, u.email
+         FROM users u
+         WHERE u.username LIKE ?
+           AND u.user_id <> ?
+           AND u.user_id NOT IN (
+                SELECT addressee_id
+                FROM friendships
+                WHERE requester_id = ?
+             UNION
+                SELECT requester_id
+                FROM friendships
+                WHERE addressee_id = ?
+           )
+         ORDER BY u.username ASC`,
+        [likeTerm, currentUserId, currentUserId, currentUserId]
     );
+
     return rows;
 }
 

@@ -1,4 +1,6 @@
-<h2>Friends</h2>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Friends</h2>
+</div>
 
 <% if (error) { %>
     <div class="alert alert-danger">
@@ -6,73 +8,122 @@
     </div>
     <% } %>
 
-        <div class="row">
+        <div class="row mb-4">
             <div class="col-md-6">
-                <h4>Existing Friendships</h4>
-                <ul class="list-group mb-3">
-                    <% if (!friendships.length) { %>
-                        <li class="list-group-item text-muted">No friends yet.</li>
-                        <% } %>
-                            <% friendships.forEach(f=> { %>
-                                <li class="list-group-item">
-                                    <% if (f.requester_id===user.user_id) { %>
-                                        You → <strong>
-                                            <%= f.addressee_name %>
-                                        </strong> (<%= f.status %>)
-                                            <% } else { %>
-                                                <strong>
-                                                    <%= f.requester_name %>
-                                                </strong> → You (<%= f.status %>)
-                                                    <% } %>
-                                </li>
-                                <% }) %>
-                </ul>
-
-                <h4>Incoming Requests</h4>
-                <ul class="list-group mb-3">
-                    <% if (!pending.length) { %>
-                        <li class="list-group-item text-muted">No pending requests.</li>
-                        <% } %>
-                            <% pending.forEach(p=> { %>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span><strong>
-                                            <%= p.requester_name %>
-                                        </strong> wants to add you</span>
-                                    <form method="post" action="/friends/respond" class="d-flex gap-2">
-                                        <input type="hidden" name="friendship_id" value="<%= p.friendship_id %>">
-                                        <button name="action" value="accept"
-                                            class="btn btn-sm btn-success">Accept</button>
-                                        <button name="action" value="reject"
-                                            class="btn btn-sm btn-outline-danger">Reject</button>
-                                    </form>
-                                </li>
-                                <% }) %>
-                </ul>
-            </div>
-
-            <div class="col-md-6">
-                <h4>Find Users</h4>
-                <form method="post" action="/friends/search" class="mb-3">
-                    <div class="input-group">
-                        <input type="text" name="term" class="form-control" placeholder="Search by username">
-                        <button class="btn btn-outline-secondary">Search</button>
-                    </div>
+                <form method="post" action="/friends/search" class="d-flex gap-2">
+                    <input type="text" name="term" class="form-control" placeholder="Search users by username">
+                    <button class="btn btn-primary">Search</button>
                 </form>
-
-                <ul class="list-group">
-                    <% if (searchResults && searchResults.length) { %>
-                        <% searchResults.forEach(u=> { %>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <span>
-                                    <%= u.username %>
-                                </span>
-                                <form method="post" action="/friends/request">
-                                    <input type="hidden" name="addressee_id" value="<%= u.user_id %>">
-                                    <button class="btn btn-sm btn-primary">Add Friend</button>
-                                </form>
-                            </li>
-                            <% }) %>
-                                <% } %>
-                </ul>
             </div>
         </div>
+
+        <% if (searchResults && searchResults.length) { %>
+            <h4>Search Results</h4>
+            <ul class="list-group mb-4">
+                <% searchResults.forEach(u=> { %>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>
+                            <strong>
+                                <%= u.username %>
+                            </strong>
+                            <small class="text-muted ms-2">
+                                <%= u.email %>
+                            </small>
+                        </span>
+                        <form method="post" action="/friends/request" class="mb-0">
+                            <input type="hidden" name="addressee_id" value="<%= u.user_id %>">
+                            <button class="btn btn-sm btn-outline-success">Add Friend</button>
+                        </form>
+                    </li>
+                    <% }) %>
+            </ul>
+            <% } %>
+
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <h4>Incoming Requests</h4>
+                        <% if (!incoming || !incoming.length) { %>
+                            <p class="text-muted">No pending requests.</p>
+                            <% } else { %>
+                                <ul class="list-group">
+                                    <% incoming.forEach(f=> { %>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span>
+                                                <strong>
+                                                    <%= f.requester_name %>
+                                                </strong>
+                                                <small class="text-muted ms-2">wants to be your friend</small>
+                                            </span>
+                                            <div class="btn-group">
+                                                <form method="post" action="/friends/respond" class="mb-0 me-1">
+                                                    <input type="hidden" name="friendship_id"
+                                                        value="<%= f.friendship_id %>">
+                                                    <input type="hidden" name="action" value="accept">
+                                                    <button class="btn btn-sm btn-success">Accept</button>
+                                                </form>
+                                                <form method="post" action="/friends/respond" class="mb-0">
+                                                    <input type="hidden" name="friendship_id"
+                                                        value="<%= f.friendship_id %>">
+                                                    <input type="hidden" name="action" value="reject">
+                                                    <button class="btn btn-sm btn-outline-secondary">Reject</button>
+                                                </form>
+                                            </div>
+                                        </li>
+                                        <% }) %>
+                                </ul>
+                                <% } %>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <h4>Outgoing Requests</h4>
+                        <% if (!outgoing || !outgoing.length) { %>
+                            <p class="text-muted">No outgoing requests.</p>
+                            <% } else { %>
+                                <ul class="list-group">
+                                    <% outgoing.forEach(f=> { %>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span>
+                                                You →
+                                                <strong>
+                                                    <%= f.requester_id===user.user_id ? f.addressee_name :
+                                                        f.requester_name %>
+                                                </strong>
+                                                <small class="text-muted ms-2">(pending)</small>
+                                            </span>
+                                            <form method="post" action="/friends/cancel" class="mb-0">
+                                                <input type="hidden" name="friendship_id"
+                                                    value="<%= f.friendship_id %>">
+                                                <button class="btn btn-sm btn-outline-danger">Cancel</button>
+                                            </form>
+                                        </li>
+                                        <% }) %>
+                                </ul>
+                                <% } %>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <h4>Your Friends</h4>
+                        <% if (!friends || !friends.length) { %>
+                            <p class="text-muted">You have no friends yet.</p>
+                            <% } else { %>
+                                <ul class="list-group">
+                                    <% friends.forEach(f=> { %>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span>
+                                                <% const otherName=f.requester_id===user.user_id ? f.addressee_name :
+                                                    f.requester_name; %>
+                                                    <strong>
+                                                        <%= otherName %>
+                                                    </strong>
+                                            </span>
+                                            <form method="post" action="/friends/remove" class="mb-0">
+                                                <input type="hidden" name="friendship_id"
+                                                    value="<%= f.friendship_id %>">
+                                                <button class="btn btn-sm btn-outline-danger">Unfriend</button>
+                                            </form>
+                                        </li>
+                                        <% }) %>
+                                </ul>
+                                <% } %>
+                    </div>
+                </div>
